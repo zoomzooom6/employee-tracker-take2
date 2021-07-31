@@ -1,15 +1,17 @@
 const db = require('../db/connection');
+const cTable = require('console.table');
 
-let getUsers = (id, manager_id) => {
+const getUsers = (id, manager_id) => {
     db.query(
-        'SELECT * FROM employees WHERE id = ? and manager_id = ?', 
+        'SELECT e.id, e.first_name, e.last_name, m.first_name AS manager FROM employees e LEFT JOIN employees m ON e.manager_id = m.id WHERE e.id = ? and e.manager_id = ?', 
         [id, manager_id],
         function(err, result) {
             if(err) {
                 console.log(err.message);
                 return;
             }
-            console.log(result);
+            console.table(result);
+            return result;
         }
     )
 };
